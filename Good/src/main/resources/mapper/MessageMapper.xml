@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.work.warehouse.mapper.MessageMapper">
+
+    <sql id="messageSQL">
+        out_time, content, message_status
+    </sql>
+
+    <sql id="messageSQLAll">
+        id, out_time, content, message_status
+    </sql>
+
+    <resultMap id="messageMap" type="com.work.warehouse.entity.Message">
+        <result property="id" column="id"/>
+        <result property="outTime" column="out_time"/>
+        <result property="content" column="content"/>
+        <result property="messageStatus" column="message_status"/>
+    </resultMap>
+
+    <insert id="addMessage" parameterType="com.work.warehouse.entity.Message" keyProperty="id" useGeneratedKeys="true">
+        insert into message(<include refid="messageSQL"/>) values (#{outTime}, #{content}, #{messageStatus});
+    </insert>
+
+    <select id="findMessageById" resultMap="messageMap">
+        select <include refid="messageSQLAll"/>
+        from message
+        where id = #{id};
+    </select>
+
+    <update id="updateMessageStatus">
+        update message
+        set message_status = #{messageStatus}
+        where id = #{id};
+    </update>
+
+    <select id="findMessageTimeSlot" resultMap="messageMap">
+        select <include refid="messageSQLAll"/>
+        from message
+        <where>
+            <if test="beforeDate != null">
+                and out_time &gt;= #{beforeDate}
+            </if>
+            <if test="afterDate != null">
+                and out_time &lt;= #{afterDate}
+            </if>
+        </where>
+        limit #{pageSieze}, #{count};
+    </select>
+</mapper>

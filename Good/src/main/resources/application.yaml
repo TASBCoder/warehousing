@@ -1,0 +1,47 @@
+#ServerProperties
+server:
+  port: 8080
+  servlet:
+    context-path: /
+spring:
+  #DatasourceProperties
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3306/warehouse
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #数据库连接池使用的是HikariDataSource
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      #连接池的最大连接数15
+      maximum-pool-size: 15
+      #保留的连接数量
+      minimum-idle: 5
+      #连接超时时间
+      idle-timeout: 30000
+  # redis配置
+  redis:
+    host: 192.168.229.3
+    database: 0
+    password: root
+    port: 6379
+  #ThymeleafProperties
+  thymeleaf:
+    cache: false
+
+  rabbitmq:
+    host: 192.168.229.3
+    username: root
+    port: 5672
+    password: root
+    virtual-host: /
+
+#MybatisProperties
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    use-generated-keys: true
+    #字段名和属性名自动匹配
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: com.work.warehouse.entity

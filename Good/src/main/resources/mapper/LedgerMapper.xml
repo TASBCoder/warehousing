@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.work.warehouse.mapper.LedgerMapper">
+    <sql id="ledgerSQL">
+        good_identity, serial_number, number, store, operator_id, opertor
+    </sql>
+
+    <sql id="ledgerSQLAll">
+        good_identity, serial_number, number, store, operator_id, create_time, opertor
+    </sql>
+
+    <insert id="InWarehousing" keyProperty="id" useGeneratedKeys="true">
+        insert into ledgers(
+            <include refid="ledgerSQL"/>
+        ) values (#{goodIdentify}, #{serialNumber}, #{number}, #{store}, #{operatorId}, #{opertor});
+    </insert>
+
+    <insert id="OutWarehousing" keyProperty="id" useGeneratedKeys="true">
+        insert into ledgers(
+        <include refid="ledgerSQL"/>
+        ) values (#{goodIdentify}, #{serialNumber}, #{number}, #{store}, #{operatorId}, #{opertor});
+    </insert>
+</mapper>

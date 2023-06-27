@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.work.warehouse.mapper.GoodMapper">
+
+    <resultMap id="goodMap" type="good">
+        <result property="id" column="id"/>
+        <result property="identify" column="identify"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <result property="stock" column="stock"/>
+        <result property="createTime" column="create_time"/>
+        <result property="description" column="description"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="goodSql">
+        identify, name, price, stock, description
+    </sql>
+
+    <sql id="goodSqlAll">
+       id, identify, name, price, stock, create_time, description, deleted
+    </sql>
+
+    <insert id="addGood" parameterType="com.work.warehouse.entity.Good" keyProperty="id" useGeneratedKeys="true">
+        insert into goods(<include refid="goodSql"></include>)
+            value(#{identify}, #{name}, #{price}, #{stock}, #{description})
+    </insert>
+
+    <update id="updateGoodByIdentify" parameterType="com.work.warehouse.entity.Good">
+        update goods
+        set name=#{name}, price=#{price}, stock=#{stock}, description=#{description}
+        where identify=#{identify};
+    </update>
+
+    <delete id="deleteGood">
+        update goods
+        set deleted=1
+        where identify = #{identify};
+    </delete>
+
+    <select id="selectGoodByName" resultMap="goodMap">
+        select <include refid="goodSqlAll"/>
+        from goods
+        where name like concat("%",#{name},"%");
+    </select>
+
+    <select id="selectGoodLimitByName" resultMap="goodMap">
+        select <include refid="goodSqlAll"/>
+        from goods
+        where name like concat("%",#{name},"%") and deleted !=1
+        order by create_time desc
+        limit #{pageSize}, #{count};
+    </select>
+
+    <select id="selectGoodByIdentify" resultType="com.work.warehouse.entity.Good">
+        select <include refid="goodSqlAll"/>
+        from goods
+        where identify = #{identify};
+    </select>
+
+    <select id="selectTotalGoodByName" resultType="int">
+        select count(id) from goods where name = #{name};
+    </select>
+</mapper>
